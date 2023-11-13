@@ -1,5 +1,7 @@
 import { TargetConfiguration } from '@nx/devkit';
 import useSourceMap from './use-source-map';
+import PropertyRenderer from './property-renderer';
+import { useState } from 'react';
 
 /* eslint-disable-next-line */
 export interface TargetProps {
@@ -9,32 +11,23 @@ export interface TargetProps {
 }
 
 export function Target(props: TargetProps) {
-  const sourceMap = useSourceMap(props.projectRoot);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   return (
-    <div>
-      <h3 className="text-lg pl-3">{props.targetName}</h3>
-      {Object.entries(props.targetConfiguration).map(([key, value]) => {
-        if (typeof value === 'string') {
-          return (
-            <div
-              className="pl-6"
-              title={JSON.stringify(
-                sourceMap[`targets.${props.targetName}.${key}`]
-              )}
-            >
-              <span className="font-medium">{key}</span>: <code>{value}</code>
-            </div>
-          );
-        } else if (Array.isArray(value)) {
-          return (
-            <div className="pl-6">
-              <span className="font-medium">{key}</span>:{' '}
-              <code>{value.join(', ')}</code>
-            </div>
-          );
-        } else {
-        }
-      })}
+    <div className="ml-3">
+      <h3 className="text-lg" onClick={() => setIsCollapsed(!isCollapsed)}>
+        {isCollapsed ? '▶' : '▼'} {props.targetName}
+      </h3>
+      <div className={`ml-3 ${isCollapsed ? 'hidden' : ''}`}>
+        {Object.entries(props.targetConfiguration).map(([key, value]) =>
+          PropertyRenderer({
+            projectRoot: props.projectRoot,
+            propertyKey: key,
+            propertyValue: value,
+            keyPrefix: `targets.${props.targetName}`,
+          })
+        )}
+      </div>
     </div>
   );
 }

@@ -2,3 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 /* You can add global styles to this file, and also import other style files */
+
+@font-face {
+  src: url('../fonts/InputMono-Regular.woff2') format('woff2'),
+    url('../fonts/InputMono-Regular.woff') format('woff');
+  font-family: 'InputMono';
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+}
+
+code,
+pre {
+  font-family: 'InputMono', monospace;
+}

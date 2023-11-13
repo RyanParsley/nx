@@ -4,6 +4,8 @@ import Target from './target';
 import useProject from './use-project';
 
 import useSourceMap from './use-source-map';
+import { getSourceInformation } from './get-source-information';
+import PropertyRenderer from './property-renderer';
 
 export function App() {
   const projectName = 'large-pkg1';
@@ -12,17 +14,34 @@ export function App() {
   const project = useProject(projectName);
 
   return (
-    <div className="m-2">
+    <div className="m-4">
       <h1 className="text-2xl">{project.name}</h1>
+      <h2 className="text-lg pl-6 mb-3">{project.root}</h2>
       <div>
-        <h2 className="text-xl">Targets</h2>
-        {Object.entries(project.targets ?? {}).map(([targetName, target]) =>
-          Target({
-            targetName: targetName,
-            targetConfiguration: target,
+        <div className="mb-2">
+          <h2 className="text-xl">Targets</h2>
+          {Object.entries(project.targets ?? {}).map(([targetName, target]) =>
+            Target({
+              targetName: targetName,
+              targetConfiguration: target,
+              projectRoot,
+            })
+          )}
+        </div>
+        {Object.entries(project).map(([key, value]) => {
+          if (
+            key === 'targets' ||
+            key === 'root' ||
+            key === 'name' ||
+            key === '$schema'
+          )
+            return undefined;
+          return PropertyRenderer({
+            propertyKey: key,
+            propertyValue: value,
             projectRoot,
-          })
-        )}
+          });
+        })}
       </div>
     </div>
   );
