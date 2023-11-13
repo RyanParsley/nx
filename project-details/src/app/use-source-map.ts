@@ -1,21 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-const useSourceMap = () => {
-  const [sourceMap, setSourceMap] = useState(null);
+import sampleSourceMap from '../assets/sample-source-map.json';
 
-  useEffect(() => {
-    const fetchSourceMap = async () => {
-      try {
-        const response = await fetch('../assets/sample-source-map.json');
-        const data = await response.json();
-        setSourceMap(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchSourceMap();
-  }, []);
+const useSourceMap = (projectName: string) => {
+  const [sourceMap] = useState<Record<string, string[]>>(
+    (sampleSourceMap as Record<string, Record<string, string[]>>)[projectName]
+  );
 
   return sourceMap;
 };
